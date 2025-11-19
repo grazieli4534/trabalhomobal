@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Escolar - Tela Principal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .header-content h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-info span {
+            font-size: 1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        .dashboard h2 {
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .dashboard h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            border-radius: 2px;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid #3498db;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card h3 {
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            font-size: 1.4rem;
+            font-weight: 600;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.7rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .form-group select,
+        .form-group input {
+            padding: 0.9rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-group button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-group button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .report-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .report-actions button {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .report-actions button:hover {
+            background: #34495e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(44, 62, 80, 0.3);
+        }
+
+        /* Data Display Section */
+        .data-display {
+            margin-top: 2rem;
+        }
+
+        .data-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .data-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.7rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.9rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Success/Error Messages */
+        .message {
+            padding: 0.8rem 1.2rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-content">
+                <h1>Sistema Escolar - Controle Acadêmico</h1>
+                <div class="user-info">
+                    <span>Bem-vindo, Professor Silva</span>
+                    <button class="logout-btn" id="logoutBtn">Sair</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-area">
+                <div class="dashboard">
+                    <h2>Painel de Controle</h2>
+                    
+                    <div id="messageArea"></div>
+                    
+                    <div class="grid-layout">
+                        <!-- Seção de Lançamento de Notas -->
+                        <div class="card">
+                            <h3>Lançamento de Notas</h3>
+                            <div class="form-group">
+                                <select id="studentSelect">
+                                    <option value="">Selecionar Aluno</option>
+                                    <option value="1">João Silva</option>
+                                    <option value="2">Maria Santos</option>
+                                    <option value="3">Pedro Oliveira</option>
+                                    <option value="4">Ana Costa</option>
+                                </select>
+                                <select id="subjectSelect">
+                                    <option value="">Selecionar Matéria</option>
+                                    <option value="matematica">Matemática</option>
+                                    <option value="portugues">Português</option>
+                                    <option value="ciencias">Ciências</option>
+                                    <option value="historia">História</option>
+                                </select>
+                                <input type="number" id="gradeInput" placeholder="Nota (0-10)" min="0" max="10" step="0.1">
+                                <button id="addGradeBtn">Lançar Nota</button>
+                            </div>
+                        </div>
+
+                        <!-- Seção de Lançamento de Faltas -->
+                        <div class="card">
+                            <h3>Controle de Faltas</h3>
+                            <div class="form-group">
+                                <select id="attendanceStudent">
+                                    <option value="">Selecionar Aluno</option>
+                                    <option value="1">João Silva</option>
+                                    <option value="2">Maria Santos</option>
+                                    <option value="3">Pedro Oliveira</option>
+                                    <option value="4">Ana Costa</option>
+                                </select>
+                                <input type="date" id="attendanceDate">
+                                <select id="attendanceStatus">
+                                    <option value="presente">Presença</option>
+                                    <option value="falta">Falta</option>
+                                </select>
+                                <button id="addAttendanceBtn">Registrar</button>
+                            </div>
+                        </div>
+
+                        <!-- Seção de Relatórios -->
+                        <div class="card">
+                            <h3>Relatórios</h3>
+                            <div class="report-actions">
+                                <button id="gradesReportBtn">Boletim de Notas</button>
+                                <button id="attendanceReportBtn">Relatório de Faltas</button>
+                                <button id="statisticsBtn">Estatísticas</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Display Section -->
+                    <div class="data-display">
+                        <div class="data-card">
+                            <h3>Notas Lançadas</h3>
+                            <table id="gradesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Aluno</th>
+                                        <th>Matéria</th>
+                                        <th>Nota</th>
+                                        <th>Data</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="gradesTableBody">
+                                    <!-- Grades will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="data-card">
+                            <h3>Registro de Faltas</h3>
+                            <table id="attendanceTable">
+                                <thead>
+                                    <tr>
+                                        <th>Aluno</th>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendanceTableBody">
+                                    <!-- Attendance records will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sample data
+        let grades = [
+            { id: 1, student: "João Silva", subject: "Matemática", grade: 8.5, date: "2023-10-15" },
+            { id: 2, student: "Maria Santos", subject: "Português", grade: 9.0, date: "2023-10-16" }
+        ];
+
+        let attendance = [
+            { id: 1, student: "João Silva", date: "2023-10-15", status: "presente" },
+            { id: 2, student: "Maria Santos", date: "2023-10-16", status: "falta" }
+        ];
+
+        // DOM Elements
+        const logoutBtn = document.getElementById('logoutBtn');
+        const addGradeBtn = document.getElementById('addGradeBtn');
+        const addAttendanceBtn = document.getElementById('addAttendanceBtn');
+        const gradesReportBtn = document.getElementById('gradesReportBtn');
+        const attendanceReportBtn = document.getElementById('attendanceReportBtn');
+        const statisticsBtn = document.getElementById('statisticsBtn');
+        const messageArea = document.getElementById('messageArea');
+        const gradesTableBody = document.getElementById('gradesTableBody');
+        const attendanceTableBody = document.getElementById('attendanceTableBody');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            renderGradesTable();
+            renderAttendanceTable();
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', function() {
+            if (confirm('Tem certeza que deseja sair do sistema?')) {
+                alert('Logout realizado com sucesso!');
+                // In a real application, this would redirect to the login page
+                // window.location.href = 'login.html';
+            }
+        });
+
+        // Add grade functionality
+        addGradeBtn.addEventListener('click', function() {
+            const studentSelect = document.getElementById('studentSelect');
+            const subjectSelect = document.getElementById('subjectSelect');
+            const gradeInput = document.getElementById('gradeInput');
+            
+            const studentId = studentSelect.value;
+            const subject = subjectSelect.value;
+            const grade = parseFloat(gradeInput.value);
+            
+            if (!studentId || !subject || isNaN(grade)) {
+                showMessage('Por favor, preencha todos os campos corretamente.', 'error');
+                return;
+            }
+            
+            if (grade < 0 || grade > 10) {
+                showMessage('A nota deve estar entre 0 e 10.', 'error');
+                return;
+            }
+            
+            const studentName = studentSelect.options[studentSelect.selectedIndex].text;
+            const newGrade = {
+                id: grades.length + 1,
+                student: studentName,
+                subject: subject,
+                grade: grade,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            grades.push(newGrade);
+            renderGradesTable();
+            showMessage('Nota lançada com sucesso!', 'success');
+            
+            // Reset form
+            studentSelect.value = '';
+            subjectSelect.value = '';
+            gradeInput.value = '';
+        });
+
+        // Add attendance functionality
+        addAttendanceBtn.addEventListener('click', function() {
+            const studentSelect = document.getElementById('attendanceStudent');
+            const dateInput = document.getElementById('attendanceDate');
+            const statusSelect = document.getElementById('attendanceStatus');
+            
+            const studentId = studentSelect.value;
+            const date = dateInput.value;
+            const status = statusSelect.value;
+            
+            if (!studentId || !date) {
+                showMessage('Por favor, preencha todos os campos.', 'error');
+                return;
+            }
+            
+            const studentName = studentSelect.options[studentSelect.selectedIndex].text;
+            const newAttendance = {
+                id: attendance.length + 1,
+                student: studentName,
+                date: date,
+                status: status
+            };
+            
+            attendance.push(newAttendance);
+            renderAttendanceTable();
+            showMessage('Registro de presença adicionado com sucesso!', 'success');
+            
+            // Reset form
+            studentSelect.value = '';
+            dateInput.value = '';
+            statusSelect.value = 'presente';
+        });
+
+        // Report buttons functionality
+        gradesReportBtn.addEventListener('click', function() {
+            showMessage('Relatório de notas gerado com sucesso!', 'success');
+            // In a real application, this would generate a PDF or open a detailed report
+        });
+
+        attendanceReportBtn.addEventListener('click', function() {
+            showMessage('Relatório de faltas gerado com sucesso!', 'success');
+            // In a real application, this would generate a PDF or open a detailed report
+        });
+
+        statisticsBtn.addEventListener('click', function() {
+            showMessage('Estatísticas calculadas com sucesso!', 'success');
+            // In a real application, this would show statistics
+        });
+
+        // Render grades table
+        function renderGradesTable() {
+            gradesTableBody.innerHTML = '';
+            
+            if (grades.length === 0) {
+                gradesTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhuma nota lançada ainda.</td></tr>';
+                return;
+            }
+            
+            grades.forEach(grade => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${grade.student}</td>
+                    <td>${grade.subject}</td>
+                    <td>${grade.grade}</td>
+                    <td>${formatDate(grade.date)}</td>
+                    <td>
+                        <button class="delete-btn" data-id="${grade.id}" data-type="grade">Excluir</button>
+                    </td>
+                `;
+                gradesTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn[data-type="grade"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteGrade(id);
+                });
+            });
+        }
+
+        // Render attendance table
+        function renderAttendanceTable() {
+            attendanceTableBody.innerHTML = '';
+            
+            if (attendance.length === 0) {
+                attendanceTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Nenhum registro de presença ainda.</td></tr>';
+                return;
+            }
+            
+            attendance.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.student}</td>
+                    <td>${formatDate(record.date)}</td>
+                    <td>${record.status === 'presente' ? 'Presença' : 'Falta'}</td>
+                    <td>
+                        <button class="delete-btn" data-id="${record.id}" data-type="attendance">Excluir</button>
+                    </td>
+                `;
+                attendanceTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn[data-type="attendance"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteAttendance(id);
+                });
+            });
+        }
+
+        // Delete grade
+        function deleteGrade(id) {
+            if (confirm('Tem certeza que deseja excluir esta nota?')) {
+                grades = grades.filter(grade => grade.id !== id);
+                renderGradesTable();
+                showMessage('Nota excluída com sucesso!', 'success');
+            }
+        }
+
+        // Delete attendance record
+        function deleteAttendance(id) {
+            if (confirm('Tem certeza que deseja excluir este registro?')) {
+                attendance = attendance.filter(record => record.id !== id);
+                renderAttendanceTable();
+                showMessage('Registro excluído com sucesso!', 'success');
+            }
+        }
+
+        // Show message
+        function showMessage(message, type) {
+            messageArea.innerHTML = `<div class="message ${type}">${message}</div>`;
+            
+            // Auto-hide message after 5 seconds
+            setTimeout(() => {
+                messageArea.innerHTML = '';
+            }, 5000);
+        }
+
+        // Format date to Brazilian format
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+    </script>
+</body>
+</html>
